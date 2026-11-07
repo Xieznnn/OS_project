@@ -1,0 +1,5 @@
+The contents of the LEBench/ directory come from
+https://github.com/LinuxPerfStudy/LEBench and are redistributed unmodified
+apart from the removal of its own .git directory.
+
+See the upstream repository for the full licence text.

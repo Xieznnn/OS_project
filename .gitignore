@@ -1,0 +1,8 @@
+LEBench/TEST_DIR/OS_Eval
+LEBench/output*.csv
+LEBench/new_output_file.csv
+LEBench/output_file.csv
+*.o
+*.deb
+*.vdi
+*.iso
