@@ -1,0 +1,111 @@
+  CHK     include/config/kernel.release
+  CHK     include/generated/uapi/linux/version.h
+  HOSTCC  arch/x86/tools/relocs_32.o
+  HOSTCC  arch/x86/tools/relocs_64.o
+  CHK     include/generated/utsrelease.h
+In file included from arch/x86/tools/relocs_64.c:17:
+In function ‘sort_relocs’,
+    inlined from ‘emit_relocs’ at arch/x86/tools/relocs.c:996:2,
+    inlined from ‘process_64’ at arch/x86/tools/relocs.c:1100:2:
+arch/x86/tools/relocs.c:954:2: warning: argument 1 null where non-null expected [-Wnonnull]
+  954 |  qsort(r->offset, r->count, sizeof(r->offset[0]), cmp_relocs);
+      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from arch/x86/tools/relocs.h:6,
+                 from arch/x86/tools/relocs_64.c:1:
+arch/x86/tools/relocs.c: In function ‘process_64’:
+/usr/include/stdlib.h:830:13: note: in a call to function ‘qsort’ declared here
+  830 | extern void qsort (void *__base, size_t __nmemb, size_t __size,
+      |             ^~~~~
+  HOSTLD  arch/x86/tools/relocs
+  CALL    scripts/checksyscalls.sh
+  CHK     include/generated/compile.h
+  CPUSTR  arch/x86/boot/cpustr.h
+  CC      arch/x86/boot/string.o
+  CC      arch/x86/boot/tty.o
+  CC      arch/x86/boot/video.o
+  RELOCS  arch/x86/boot/compressed/vmlinux.relocs
+  CC      arch/x86/boot/video-mode.o
+  CC      arch/x86/boot/version.o
+  CC      arch/x86/boot/video-vga.o
+  CC      arch/x86/boot/compressed/aslr.o
+  CC      arch/x86/boot/compressed/eboot.o
+In file included from include/linux/kernel.h:11,
+                 from include/asm-generic/bug.h:13,
+                 from ./arch/x86/include/asm/bug.h:35,
+                 from include/linux/bug.h:4,
+                 from include/linux/thread_info.h:11,
+                 from ./arch/x86/include/asm/elf.h:7,
+                 from include/linux/elf.h:4,
+                 from arch/x86/boot/compressed/misc.h:17,
+                 from arch/x86/boot/compressed/aslr.c:1:
+include/linux/log2.h:22:1: warning: ignoring attribute ‘noreturn’ because it conflicts with attribute ‘const’ [-Wattributes]
+   22 | int ____ilog2_NaN(void);
+      | ^~~
+In file included from include/linux/kernel.h:11,
+                 from include/linux/list.h:8,
+                 from include/linux/preempt.h:10,
+                 from include/linux/spinlock.h:50,
+                 from include/linux/seqlock.h:35,
+                 from include/linux/time.h:5,
+                 from include/linux/efi.h:16,
+                 from arch/x86/boot/compressed/eboot.c:10:
+include/linux/log2.h:22:1: warning: ignoring attribute ‘noreturn’ because it conflicts with attribute ‘const’ [-Wattributes]
+   22 | int ____ilog2_NaN(void);
+      | ^~~
+  AS      arch/x86/boot/compressed/efi_stub_64.o
+In file included from include/linux/spinlock.h:87,
+                 from include/linux/mm_types.h:8,
+                 from ./arch/x86/include/asm/vdso.h:10,
+                 from ./arch/x86/include/asm/elf.h:76,
+                 from include/linux/elf.h:4,
+                 from arch/x86/boot/compressed/misc.h:17,
+                 from arch/x86/boot/compressed/aslr.c:1:
+./arch/x86/include/asm/spinlock.h: In function ‘arch_spin_lock’:
+./arch/x86/include/asm/spinlock.h:119:3: warning: implicit declaration of function ‘__ticket_lock_spinning’ [-Wimplicit-function-declaration]
+  119 |   __ticket_lock_spinning(lock, inc.tail);
+      |   ^~~~~~~~~~~~~~~~~~~~~~
+  CC      arch/x86/boot/video-vesa.o
+./arch/x86/include/asm/spinlock.h: In function ‘arch_spin_unlock’:
+./arch/x86/include/asm/spinlock.h:154:4: warning: implicit declaration of function ‘__ticket_unlock_kick’ [-Wimplicit-function-declaration]
+  154 |    __ticket_unlock_kick(lock, (head + TICKET_LOCK_INC));
+      |    ^~~~~~~~~~~~~~~~~~~~
+  AS      arch/x86/boot/compressed/efi_thunk_64.o
+  CC      arch/x86/boot/video-bios.o
+arch/x86/boot/compressed/eboot.c: In function ‘make_boot_params’:
+arch/x86/boot/compressed/eboot.c:1090:8: warning: taking address of packed member of ‘struct boot_params’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+ 1090 |  efi = &boot_params->efi_info;
+      |        ^~~~~~~~~~~~~~~~~~~~~~
+arch/x86/boot/compressed/eboot.c:1091:7: warning: taking address of packed member of ‘struct boot_params’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+ 1091 |  bi = &boot_params->apm_bios_info;
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/boot/compressed/eboot.c:1092:8: warning: taking address of packed member of ‘struct boot_params’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+ 1092 |  sdt = &boot_params->sys_desc_table;
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/boot/compressed/eboot.c: In function ‘setup_e820’:
+arch/x86/boot/compressed/eboot.c:1180:25: warning: taking address of packed member of ‘struct boot_params’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+ 1180 |  struct efi_info *efi = &params->efi_info;
+      |                         ^~~~~~~~~~~~~~~~~
+arch/x86/boot/compressed/eboot.c: In function ‘exit_boot’:
+arch/x86/boot/compressed/eboot.c:1292:25: warning: taking address of packed member of ‘struct boot_params’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+ 1292 |  struct efi_info *efi = &boot_params->efi_info;
+      |                         ^~~~~~~~~~~~~~~~~~~~~~
+arch/x86/boot/compressed/eboot.c: In function ‘efi_main’:
+arch/x86/boot/compressed/eboot.c:1422:7: warning: taking address of packed member of ‘struct desc_ptr’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+ 1422 |       (unsigned long *)&gdt->address);
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  HOSTCC  arch/x86/boot/tools/build
+  CC      arch/x86/boot/cpu.o
+  LZ4     arch/x86/boot/compressed/vmlinux.bin.lz4
+  MKPIGGY arch/x86/boot/compressed/piggy.S
+  AS      arch/x86/boot/compressed/piggy.o
+  LD      arch/x86/boot/compressed/vmlinux
+  ZOFFSET arch/x86/boot/zoffset.h
+  OBJCOPY arch/x86/boot/vmlinux.bin
+  AS      arch/x86/boot/header.o
+  LD      arch/x86/boot/setup.elf
+  OBJCOPY arch/x86/boot/setup.bin
+  BUILD   arch/x86/boot/bzImage
+Setup is 17852 bytes (padded to 17920 bytes).
+System is 8567 kB
+CRC 950e4535
+Kernel: arch/x86/boot/bzImage is ready  (#3)
