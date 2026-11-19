@@ -24,20 +24,25 @@ about 5. Application benchmarks (Redis, Apache, Nginx) are out of scope.
 
 | Item | Value |
 |---|---|
-| Host machine | Alibaba Cloud ECS, Intel Xeon 6982P-C (4 cores, 8 vCPU) |
+| Host machine | Alibaba Cloud ECS, Intel Xeon 6982P-C, 8 vCPU |
 | Virtualisation | KVM (`systemd-detect-virt` reports `kvm`) |
-| Guest OS | Ubuntu 22.04.5 LTS (deviation D2: the paper used 16.04) |
-| vCPU / RAM | 8 vCPU, 14 GiB, 40 GiB root disk |
-| gcc | gcc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0 |
-| Kernel when repository was created | 5.4.0-216-generic |
-| Kernels measured | 5.4.0-216-generic |
-| Baseline kernel | 5.4.0-216-generic (due to cloud bootloader restriction) |
+| Guest OS | Ubuntu 20.04.6 LTS (Focal), glibc 2.31 (deviation D2: the paper used 16.04) |
+| vCPU / RAM / disk | 8 vCPU, 15 GiB RAM, 40 GiB root disk |
+| gcc | gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0 |
+| Default kernel | 5.4.0-42-generic |
+| Kernels measured so far | 5.4.0-216-generic (one pilot run, n=1; three formal repeats pending) |
+| Baseline kernel | TODO: oldest bootable 4.x kernel, ideally 4.4.5 (paper baseline is 4.0) |
+| Meltdown / PTI | CPU reports `Not affected`; PTI is not enabled, so KPTI overhead cannot be measured on this hardware (deviation D6) |
 | Upstream commit | see `docs/upstream-commit.txt` |
 
 The paper's absolute times come from an HP DL160 G9 with a 2.40 GHz Xeon E5-2630 v3
 and 128 GB DDR4. Our absolute times will never match. Every comparison in this
 repository is a **percentage relative to the baseline kernel**, or KPTI-on versus
 KPTI-off on the same kernel.
+
+Because this CPU is not affected by Meltdown, claim 2 is reported as
+**inconclusive** here; the extension experiment instead switches transparent huge
+pages between `always` and `never` (deviation D7).
 
 Differences from the paper are tabulated in `docs/deviations.md`.
 
@@ -48,7 +53,6 @@ Debian/Ubuntu:
 ```bash
 sudo apt update
 sudo apt install -y build-essential git wget ca-certificates python3
-Record gcc --version and the guest OS release into results/env/.
 
 ## 4. Reproducing a single measurement
 
