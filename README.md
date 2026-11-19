@@ -53,57 +53,75 @@ Debian/Ubuntu:
 ```bash
 sudo apt update
 sudo apt install -y build-essential git wget ca-certificates python3
+```
+
+Record `gcc --version`, `/etc/os-release` and `uname -r` into `results/env/`.
 
 ## 4. Reproducing a single measurement
 
-Measurements run from the clone at $LEBENCH_DIR, not from the copy inside this
+Measurements run from the clone at `$LEBENCH_DIR`, not from the copy inside this
 repository, so that the repository stays clean.
-Code：
-   git clone https://github.com/LinuxPerfStudy/LEBench.git "$HOME/LEBench"
-   export LEBENCH_DIR=$HOME/LEBench
-   sudo -E bash scripts/run_one.sh
 
-The script builds TEST_DIR/OS_Eval and runs it as
-./TEST_DIR/OS_Eval 0 "$(uname -r)". It writes
-$LEBENCH_DIR/output.<kernel>.csv and copies it to
-$LEBENCH_DIR/results/raw/<kernel>/<timestamp>.csv.
+```bash
+git clone https://github.com/LinuxPerfStudy/LEBench.git "$HOME/LEBench"
+export LEBENCH_DIR=$HOME/LEBench
+sudo -E bash scripts/run_one.sh
+```
 
-Runtime per kernel is 20 to 70 minutes on our hardware (recorded measured time: ~15 minutes). The first minute has no output because the program calls
-sleep(60).
+The script builds `TEST_DIR/OS_Eval`, sets the `performance` governor when
+`cpufreq` is exposed, and runs `./TEST_DIR/OS_Eval 0 "$(uname -r)"`. It copies the
+generated csv to `results/raw/<kernel>/<timestamp>.csv`.
 
-Each kernel is measured three times, each run after a fresh boot into that
+The pilot run on 5.4.0-216-generic took about 15 minutes; upstream notes expect
+20 to 70 minutes per kernel. The first minute has no output because the program
+calls `sleep(60)`.
+
+Each kernel is measured **three times**, each run after a fresh boot into that
 kernel, with no other workload on the machine.
 
 ## 5. Aggregating results
-Code：
-   export LEBENCH_DIR=$HOME/LEBench
-   python3 scripts/summarize.py
 
-This reads every results/raw/<kernel>/*.csv, keeps the kbest: values and writes
-results/summary.csv with test, kernel, n, mean_sec, stdev_sec.
+```bash
+export LEBENCH_DIR=$HOME/LEBench
+python3 scripts/summarize.py
+```
 
-The percentage used everywhere is
-   change(%) = (mean kbest of this kernel - mean kbest of baseline) / mean kbest of baseline x 100
+This reads every `results/raw/<kernel>/*.csv`, keeps the `kbest:` values and writes
+`results/summary.csv` with `test, kernel, n, mean_sec, stdev_sec`.
+
+The percentage used everywhere is:
+
+```text
+change(%) = (mean kbest of this kernel - mean kbest of baseline) / mean kbest of baseline x 100
+```
 
 ## 6. What we deliberately do not run
 
-sudo python run.py from upstream is not used. It rewrites GRUB and runs
-grub-install --force against /dev/sda1, which can destroy the boot loader of the
-machine. We select kernels from the GRUB menu by hand and run TEST_DIR/OS_Eval
-directly. This is recorded in docs/deviations.md.
+`sudo python run.py` from upstream is not used. It rewrites GRUB and runs
+`grub-install --force` against `/dev/sda1`, which can destroy the boot loader of
+the machine. We select kernels from the GRUB menu by hand and run `TEST_DIR/OS_Eval`
+directly. This is recorded in `docs/deviations.md`.
+
 ## 7. Repository layout
-   README.md
-   NOTICE.md
-   LICENSE-LEBench
-   docs/upstream-commit.txt
-   docs/deviations.md
-   scripts/run_one.sh
-   scripts/summarize.py
-   results/env/<kernel>.txt
-   results/raw/<kernel>/<timestamp>.csv
-   results/summary.csv
-   results/logs/
-   LEBench/                 upstream snapshot, its own .git removed
-   report/                  final English PDF
-.gitignore excludes the compiled binary, kernel .deb files, ISOs and disk images.
-No file in this repository exceeds 50 MB.
+
+```text
+README.md
+NOTICE.md
+LICENSE-LEBench
+LEBench/                 upstream snapshot, its own .git removed
+docs/upstream-commit.txt
+docs/deviations.md
+scripts/run_one.sh
+scripts/summarize.py
+results/env/
+results/raw/<kernel>/<timestamp>.csv
+results/summary.csv
+results/logs/
+report/                  final English PDF
+```
+
+The `LEBench/` snapshot and `OS_Eval.c` are unmodified upstream; only `scripts/`,
+`results/`, `report/` and the top-level documentation are written by this group.
+
+`.gitignore` excludes the compiled binary, kernel `.deb` files, ISOs and disk
+images. No file in this repository exceeds 50 MB.
