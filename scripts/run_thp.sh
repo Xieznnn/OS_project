@@ -9,6 +9,7 @@ if [[ -z "${LEBENCH_DIR:-}" ]]; then
   echo "先执行 export LEBENCH_DIR=/root/LEBench"
   exit 1
 fi
+repo_root=$(cd "$(dirname "$0")/.." && pwd)
 echo "$MODE" | tee /sys/kernel/mm/transparent_hugepage/enabled
 ACTUAL=$(cat /sys/kernel/mm/transparent_hugepage/enabled)
 echo "当前设置: $ACTUAL"
@@ -20,7 +21,6 @@ cd "$LEBENCH_DIR"
 make -C TEST_DIR
 kern=$(uname -r)
 stamp=$(date +%Y%m%d-%H%M%S)
-repo_root=$(cd "$(dirname "$0")/.." && pwd)
 outdir="$repo_root/results/raw/${kern}-thp-${MODE}"
 mkdir -p "$outdir"
 {
